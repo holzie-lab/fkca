@@ -9,8 +9,6 @@ body {
   font-family: Arial;
   background: #f0f2f5;
 }
-
-/* Hamburger Menü */
 .menu-btn {
   position: fixed;
   top: 15px;
@@ -24,8 +22,6 @@ body {
   cursor: pointer;
   z-index: 100;
 }
-
-/* Sidebar */
 .sidebar {
   width: 220px;
   background: #334155;
@@ -33,25 +29,13 @@ body {
   padding: 20px;
   position: fixed;
   top: 0;
-  left: -220px; /* gizli başlar */
+  left: -220px;
   height: 100%;
   transition: left 0.3s ease;
   z-index: 99;
 }
-.sidebar.active {
-  left: 0;
-}
-.sidebar button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  background: #475569;
-  border: none;
-  color: white;
-  cursor: pointer;
-}
-
-/* İçerik kartı */
+.sidebar.active { left:0; }
+.sidebar button { width:100%; padding:10px; margin-top:10px; background:#475569; border:none; color:white; cursor:pointer; }
 .content {
   display: flex;
   justify-content: center;
@@ -67,53 +51,33 @@ body {
   width: 400px;
   max-width: 90%;
 }
-.page.active {
-  display: block;
-}
+.page.active { display:block; }
 input, select {
-  display: block;
-  margin: 10px 0;
-  padding: 8px;
-  width: 100%;
-  box-sizing: border-box;
+  display:block; margin:10px 0; padding:8px; width:100%; box-sizing:border-box;
 }
-button.calc-btn {
-  padding: 10px;
-  margin-top: 10px;
-  cursor: pointer;
-  width: 100%;
-}
+button.calc-btn { padding:10px; margin-top:10px; cursor:pointer; width:100%; }
 </style>
 </head>
 <body>
 
-<!-- Hamburger -->
 <button class="menu-btn" onclick="menuToggle()">☰</button>
 
-<!-- Sidebar -->
 <div class="sidebar" id="sidebar">
   <h3>Hesaplar</h3>
   <button onclick="sayfaGoster('demir')">Demir Hesaplama</button>
   <button onclick="sayfaGoster('hasir')">Q Tipi Hasır Metrajı</button>
 </div>
 
-<!-- İçerik -->
 <div class="content">
-
-  <!-- Demir -->
   <div id="demir" class="page">
     <h1>Demir Çapı Hesaplama</h1>
-    <label>Eski Çap (mm)</label>
-    <input type="number" id="eskiCap">
-    <label>Eski Adet</label>
-    <input type="number" id="eskiAdet">
-    <label>Yeni Çap (mm)</label>
-    <input type="number" id="yeniCap">
+    <label>Eski Çap (mm)</label><input type="number" id="eskiCap">
+    <label>Eski Adet</label><input type="number" id="eskiAdet">
+    <label>Yeni Çap (mm)</label><input type="number" id="yeniCap">
     <button class="calc-btn" onclick="hesapla()">Hesapla</button>
     <h2 id="sonuc">Sonuç: -</h2>
   </div>
 
-  <!-- Hasır -->
   <div id="hasir" class="page">
     <h1>Q Tipi Hasır Metrajı</h1>
     <label>Q Tipi Seç:</label>
@@ -212,96 +176,62 @@ button.calc-btn {
     <button class="calc-btn" onclick="hasirHesapla()">Hesapla</button>
     <h2 id="sonucHasir">Sonuç: -</h2>
   </div>
-
 </div>
 
 <script>
-function menuToggle(){
-  document.getElementById("sidebar").classList.toggle("active");
-}
-
+function menuToggle(){ document.getElementById("sidebar").classList.toggle("active"); }
 function sayfaGoster(id){
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   document.getElementById(id).classList.add("active");
   document.getElementById("sidebar").classList.remove("active");
 }
+window.onload=function(){ sayfaGoster("demir"); }
 
-window.onload = function(){ sayfaGoster("demir"); }
-
-// DEMİR HESAP
+// Demir Hesap
 function hesapla(){
   let eskiCap=parseFloat(document.getElementById("eskiCap").value);
   let eskiAdet=parseFloat(document.getElementById("eskiAdet").value);
   let yeniCap=parseFloat(document.getElementById("yeniCap").value);
-
   if(isNaN(eskiCap)||isNaN(eskiAdet)||isNaN(yeniCap)||eskiCap<=0||yeniCap<=0||eskiAdet<=0){
-    alert("Lütfen geçerli değerler girin.");
-    return;
+    alert("Lütfen geçerli değerler girin."); return;
   }
-
-  let sonuc=eskiAdet*(Math.pow(eskiCap,2)/Math.pow(yeniCap,2));
-  sonuc=Math.ceil(sonuc);
-
+  let sonuc=Math.ceil(eskiAdet*(Math.pow(eskiCap,2)/Math.pow(yeniCap,2)));
   document.getElementById("sonuc").innerText="Gerekli Adet: "+sonuc;
 }
 
-// HASIR METRAJ
+// Hasır Metraj
 const qAgirlik={
-  "188/188":3.01,
-  "106/106":1.7,"131/131":2.09,"158/158":2.54,"221/221":3.53,
-  "257/257":4.1,"257/188":3.5,"295/295":5.5,"295/257":5,"295/221":4.6,
-  "295/188":4,"295/158":3.6,"317/317":6,"317/295":5.8,"317/257":5.3,
-  "317/221":4.9,"317/188":4.2,"335/335":6.5,"335/317":6.2,"335/295":5.8,
-  "335/257":5.4,"335/221":5,"335/188":4.5,"377/377":7.5,"377/335":7,
-  "377/317":6.8,"377/295":6.5,"377/257":6,"377/221":5.5,"377/188":5,
-  "424/424":8.5,"424/377":8,"424/335":7.5,"424/317":7.2,"424/295":6.8,
-  "424/257":6.2,"424/221":5.8,"443/443":9,"443/377":8.5,"443/335":8,
-  "443/317":7.6,"443/295":7.2,"443/257":6.8,"443/221":6.2,"473/473":9.5,
-  "503/503":10,"513/513":10.2,"513/257":7,"524/524":10.5,"524/443":9.8,
-  "524/424":9.5,"524/377":9,"524/335":8.5,"524/317":8.2,"524/295":7.8,
-  "524/257":7.4,"589/589":11.5,"589/503":10.5,"589/378":9.2,"589/335":8.5,
-  "589/317":8.2,"589/295":7.8,"634/634":12.5,"636/636":12.5,"636/424":10,
-  "709/424":11,"754/754":13.5,"785/785":14,"785/295":8.5,"785/257":8,
-  "950/950":16,"1131/1131":18
-};
-
-const qGoz={
-  "188/188":0.188,
-  "106/106":0.106,"131/131":0.131,"158/158":0.158,"221/221":0.221,
-  "257/257":0.257,"257/188":0.257,"295/295":0.295,"295/257":0.295,"295/221":0.295,
-  "295/188":0.295,"295/158":0.295,"317/317":0.317,"317/295":0.317,"317/257":0.317,
-  "317/221":0.317,"317/188":0.317,"335/335":0.335,"335/317":0.335,"335/295":0.335,
-  "335/257":0.335,"335/221":0.335,"335/188":0.335,"377/377":0.377,"377/335":0.377,
-  "377/317":0.377,"377/295":0.377,"377/257":0.377,"377/221":0.377,"377/188":0.377,
-  "424/424":0.424,"424/377":0.424,"424/335":0.424,"424/317":0.424,"424/295":0.424,
-  "424/257":0.424,"424/221":0.424,"443/443":0.443,"443/377":0.443,"443/335":0.443,
-  "443/317":0.443,"443/295":0.443,"443/257":0.443,"443/221":0.443,"473/473":0.473,
-  "503/503":0.503,"513/513":0.513,"513/257":0.513,"524/524":0.524,"524/443":0.524,
-  "524/424":0.524,"524/377":0.524,"524/335":0.524,"524/317":0.524,"524/295":0.524,
-  "524/257":0.524,"589/589":0.589,"589/503":0.589,"589/378":0.589,"589/335":0.589,
-  "589/317":0.589,"589/295":0.589,"634/634":0.634,"636/636":0.636,"636/424":0.636,
-  "709/424":0.709,"754/754":0.754,"785/785":0.785,"785/295":0.785,"785/257":0.785,
-  "950/950":0.950,"1131/1131":1.131
+  "188/188":3.01,"106/106":1.7,"131/131":2.09,"158/158":2.54,"221/221":3.53,
+  "257/257":4.1,"257/188":3.5,"295/295":5.5,"295/257":5,"295/221":4.6,"295/188":4,"295/158":3.6,
+  "317/317":6,"317/295":5.8,"317/257":5.3,"317/221":4.9,"317/188":4.2,
+  "335/335":6.5,"335/317":6.2,"335/295":5.8,"335/257":5.4,"335/221":5,"335/188":4.5,
+  "377/377":7.5,"377/335":7,"377/317":6.8,"377/295":6.5,"377/257":6,"377/221":5.5,"377/188":5,
+  "424/424":8.5,"424/377":8,"424/335":7.5,"424/317":7.2,"424/295":6.8,"424/257":6.2,"424/221":5.8,
+  "443/443":9,"443/377":8.5,"443/335":8,"443/317":7.6,"443/295":7.2,"443/257":6.8,"443/221":6.2,
+  "473/473":9.5,"503/503":10,"513/513":10.2,"513/257":7,"524/524":10.5,"524/443":9.8,
+  "524/424":9.5,"524/377":9,"524/335":8.5,"524/317":8.2,"524/295":7.8,"524/257":7.4,
+  "589/589":11.5,"589/503":10.5,"589/378":9.2,"589/335":8.5,"589/317":8.2,"589/295":7.8,
+  "634/634":12.5,"636/636":12.5,"636/424":10,"709/424":11,"754/754":13.5,"785/785":14,
+  "785/295":8.5,"785/257":8,"950/950":16,"1131/1131":18
 };
 
 function hasirHesapla(){
-  let qTipi=document.getElementById("qTipi").value;
+  let q=document.getElementById("qTipi").value;
   let bindirme=parseInt(document.getElementById("bindirme").value);
   let kat=parseInt(document.getElementById("kat").value);
   let alan=parseFloat(document.getElementById("alan").value);
+  if(isNaN(alan)||alan<=0){ alert("Lütfen geçerli alan girin."); return; }
 
-  if(isNaN(alan)||alan<=0){ alert("Lütfen geçerli alan girin."); return;}
+  let kgM2=qAgirlik[q];
+  let toplamKg=kgM2*alan*kat;   // Bindirme kg etkilemez
+  let tonaj=(toplamKg/1000).toFixed(2);
 
-  let kgM2=qAgirlik[qTipi];
-  let toplamKg=kgM2*alan*kat; // Bindirme kg etkisini değiştirmez
-
-  // Hasır efektif boyutu
-  let goz=qGoz[qTipi];
-  let efektifAlan=(goz*bindirme)*(goz*bindirme); // Bindirme göz kadar overlap
-  let adet=Math.ceil(alan/efektifAlan)*kat;
+  // Adet = toplam kg ÷ tek bir hasır kg
+  let tekHasirKg=kgM2*bindirme; // tek hasırın ağırlığı (bindirme kadar overlap)
+  let adet=Math.ceil(toplamKg/tekHasirKg);
 
   document.getElementById("sonucHasir").innerText=
-  `Toplam Alan: ${alan} m²\nToplam Ağırlık: ${toplamKg.toFixed(2)} kg\nToplam Adet: ${adet} adet`;
+    `Toplam Alan: ${alan} m²\nToplam Ağırlık: ${tonaj} ton\nToplam Adet: ${adet} adet`;
 }
 </script>
 
