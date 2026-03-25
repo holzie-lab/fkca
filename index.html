@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>FK - İnşaat Hesaplama</title>
+<title>İnşaat Hesaplama</title>
 <style>
 body {
   margin: 0;
@@ -118,10 +118,10 @@ button.calc-btn {
     <h1>Q Tipi Hasır Metrajı</h1>
     <label>Q Tipi Seç:</label>
     <select id="qTipi">
+      <option value="188/188">Q 188/188</option>
       <option value="106/106">Q 106/106</option>
       <option value="131/131">Q 131/131</option>
       <option value="158/158">Q 158/158</option>
-      <option value="188/188">Q 188/188</option>
       <option value="221/221">Q 221/221</option>
       <option value="257/257">Q 257/257</option>
       <option value="257/188">Q 257/188</option>
@@ -216,40 +216,39 @@ button.calc-btn {
 </div>
 
 <script>
-function menuToggle() {
+function menuToggle(){
   document.getElementById("sidebar").classList.toggle("active");
 }
 
-function sayfaGoster(id) {
-  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+function sayfaGoster(id){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   document.getElementById(id).classList.add("active");
   document.getElementById("sidebar").classList.remove("active");
 }
 
-window.onload = function() {
-  sayfaGoster("demir");
-}
+window.onload = function(){ sayfaGoster("demir"); }
 
 // DEMİR HESAP
-function hesapla() {
-  let eskiCap = parseFloat(document.getElementById("eskiCap").value);
-  let eskiAdet = parseFloat(document.getElementById("eskiAdet").value);
-  let yeniCap = parseFloat(document.getElementById("yeniCap").value);
+function hesapla(){
+  let eskiCap=parseFloat(document.getElementById("eskiCap").value);
+  let eskiAdet=parseFloat(document.getElementById("eskiAdet").value);
+  let yeniCap=parseFloat(document.getElementById("yeniCap").value);
 
   if(isNaN(eskiCap)||isNaN(eskiAdet)||isNaN(yeniCap)||eskiCap<=0||yeniCap<=0||eskiAdet<=0){
     alert("Lütfen geçerli değerler girin.");
     return;
   }
 
-  let sonuc = eskiAdet * (Math.pow(eskiCap,2)/Math.pow(yeniCap,2));
-  sonuc = Math.ceil(sonuc);
+  let sonuc=eskiAdet*(Math.pow(eskiCap,2)/Math.pow(yeniCap,2));
+  sonuc=Math.ceil(sonuc);
 
-  document.getElementById("sonuc").innerText = "Gerekli Adet: "+sonuc;
+  document.getElementById("sonuc").innerText="Gerekli Adet: "+sonuc;
 }
 
 // HASIR METRAJ
-const qAgirlik = {
-  "106/106":1.7,"131/131":2.09,"158/158":2.54,"188/188":3.01,"221/221":3.53,
+const qAgirlik={
+  "188/188":3.01,
+  "106/106":1.7,"131/131":2.09,"158/158":2.54,"221/221":3.53,
   "257/257":4.1,"257/188":3.5,"295/295":5.5,"295/257":5,"295/221":4.6,
   "295/188":4,"295/158":3.6,"317/317":6,"317/295":5.8,"317/257":5.3,
   "317/221":4.9,"317/188":4.2,"335/335":6.5,"335/317":6.2,"335/295":5.8,
@@ -266,8 +265,9 @@ const qAgirlik = {
   "950/950":16,"1131/1131":18
 };
 
-const qGoz = {
-  "106/106":0.106,"131/131":0.131,"158/158":0.158,"188/188":0.188,"221/221":0.221,
+const qGoz={
+  "188/188":0.188,
+  "106/106":0.106,"131/131":0.131,"158/158":0.158,"221/221":0.221,
   "257/257":0.257,"257/188":0.257,"295/295":0.295,"295/257":0.295,"295/221":0.295,
   "295/188":0.295,"295/158":0.295,"317/317":0.317,"317/295":0.317,"317/257":0.317,
   "317/221":0.317,"317/188":0.317,"335/335":0.335,"335/317":0.335,"335/295":0.335,
@@ -293,11 +293,12 @@ function hasirHesapla(){
   if(isNaN(alan)||alan<=0){ alert("Lütfen geçerli alan girin."); return;}
 
   let kgM2=qAgirlik[qTipi];
-  let toplamKg=kgM2*alan*bindirme*kat;
+  let toplamKg=kgM2*alan*kat; // Bindirme kg etkisini değiştirmez
 
-  let gozBoy=qGoz[qTipi];
-  let tekParcaAlan=gozBoy*gozBoy*bindirme;
-  let adet=Math.ceil(alan/tekParcaAlan*kat);
+  // Hasır efektif boyutu
+  let goz=qGoz[qTipi];
+  let efektifAlan=(goz*bindirme)*(goz*bindirme); // Bindirme göz kadar overlap
+  let adet=Math.ceil(alan/efektifAlan)*kat;
 
   document.getElementById("sonucHasir").innerText=
   `Toplam Alan: ${alan} m²\nToplam Ağırlık: ${toplamKg.toFixed(2)} kg\nToplam Adet: ${adet} adet`;
