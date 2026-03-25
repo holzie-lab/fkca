@@ -4,191 +4,139 @@
 <meta charset="UTF-8">
 <title>İnşaat Hesaplama</title>
 <style>
-body {
-  margin: 0;
-  font-family: Arial;
-  background: #f0f2f5;
-}
-
-/* Hamburger Menü */
-.menu-btn {
-  position: fixed;
-  top: 15px;
-  left: 15px;
-  font-size: 24px;
-  background: #1e293b;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  z-index: 100;
-}
-
-/* Sidebar */
-.sidebar {
-  width: 220px;
-  background: #334155;
-  color: white;
-  padding: 20px;
-  position: fixed;
-  top: 0;
-  left: -220px; /* gizli başlar */
-  height: 100%;
-  transition: left 0.3s ease;
-  z-index: 99;
-}
-.sidebar.active { left:0; }
-.sidebar button { width:100%; padding:10px; margin-top:10px; background:#475569; border:none; color:white; cursor:pointer; }
-
-/* İçerik kartı */
-.content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-.page {
-  display: none;
-  background: white;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-  width: 400px;
-  max-width: 90%;
-}
-.page.active { display:block; }
-input, select { display:block; margin:10px 0; padding:8px; width:100%; box-sizing:border-box; }
-button.calc-btn { padding:10px; margin-top:10px; cursor:pointer; width:100%; }
+body {margin:0;font-family:Arial;background:#f0f2f5;}
+.menu-btn{position:fixed;top:15px;left:15px;font-size:24px;background:#1e293b;color:white;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;z-index:100;}
+.sidebar{width:220px;background:#334155;color:white;padding:20px;position:fixed;top:0;left:-220px;height:100%;transition:left 0.3s ease;z-index:99;}
+.sidebar.active{left:0;}
+.sidebar button{width:100%;padding:10px;margin-top:10px;background:#475569;border:none;color:white;cursor:pointer;}
+.content{display:flex;justify-content:center;align-items:center;height:100vh;}
+.page{display:none;background:white;padding:30px;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,0.2);width:400px;max-width:90%;}
+.page.active{display:block;}
+input,select{display:block;margin:10px 0;padding:8px;width:100%;box-sizing:border-box;}
+button.calc-btn{padding:10px;margin-top:10px;cursor:pointer;width:100%;}
 </style>
 </head>
 <body>
 
-<!-- Hamburger -->
 <button class="menu-btn" onclick="menuToggle()">☰</button>
-
-<!-- Sidebar -->
 <div class="sidebar" id="sidebar">
-  <h3>Hesaplar</h3>
-  <button onclick="sayfaGoster('demir')">Demir Hesaplama</button>
-  <button onclick="sayfaGoster('hasir')">Q Tipi Hasır Metrajı</button>
+<h3>Hesaplar</h3>
+<button onclick="sayfaGoster('demir')">Demir Hesaplama</button>
+<button onclick="sayfaGoster('hasir')">Q Tipi Hasır Metrajı</button>
 </div>
 
-<!-- İçerik -->
 <div class="content">
 
-  <!-- Demir -->
-  <div id="demir" class="page">
-    <h1>Demir Çapı Hesaplama</h1>
-    <label>Eski Çap (mm)</label>
-    <input type="number" id="eskiCap">
-    <label>Eski Adet</label>
-    <input type="number" id="eskiAdet">
-    <label>Yeni Çap (mm)</label>
-    <input type="number" id="yeniCap">
-    <button class="calc-btn" onclick="hesapla()">Hesapla</button>
-    <h2 id="sonuc">Sonuç: -</h2>
-  </div>
+<div id="demir" class="page">
+<h1>Demir Çapı Hesaplama</h1>
+<label>Eski Çap (mm)</label>
+<input type="number" id="eskiCap">
+<label>Eski Adet</label>
+<input type="number" id="eskiAdet">
+<label>Yeni Çap (mm)</label>
+<input type="number" id="yeniCap">
+<button class="calc-btn" onclick="hesapla()">Hesapla</button>
+<h2 id="sonuc">Sonuç: -</h2>
+</div>
 
-  <!-- Hasır -->
-  <div id="hasir" class="page">
-    <h1>Q Tipi Hasır Metrajı</h1>
-    <label>Q Tipi Seç:</label>
-    <select id="qTipi">
-      <option value="188/188">Q 188/188</option>
-      <option value="106/106">Q 106/106</option>
-      <option value="131/131">Q 131/131</option>
-      <option value="158/158">Q 158/158</option>
-      <option value="221/221">Q 221/221</option>
-      <option value="257/257">Q 257/257</option>
-      <option value="257/188">Q 257/188</option>
-      <option value="295/295">Q 295/295</option>
-      <option value="295/257">Q 295/257</option>
-      <option value="295/221">Q 295/221</option>
-      <option value="295/188">Q 295/188</option>
-      <option value="295/158">Q 295/158</option>
-      <option value="317/317">Q 317/317</option>
-      <option value="317/295">Q 317/295</option>
-      <option value="317/257">Q 317/257</option>
-      <option value="317/221">Q 317/221</option>
-      <option value="317/188">Q 317/188</option>
-      <option value="335/335">Q 335/335</option>
-      <option value="335/317">Q 335/317</option>
-      <option value="335/295">Q 335/295</option>
-      <option value="335/257">Q 335/257</option>
-      <option value="335/221">Q 335/221</option>
-      <option value="335/188">Q 335/188</option>
-      <option value="377/377">Q 377/377</option>
-      <option value="377/335">Q 377/335</option>
-      <option value="377/317">Q 377/317</option>
-      <option value="377/295">Q 377/295</option>
-      <option value="377/257">Q 377/257</option>
-      <option value="377/221">Q 377/221</option>
-      <option value="377/188">Q 377/188</option>
-      <option value="424/424">Q 424/424</option>
-      <option value="424/377">Q 424/377</option>
-      <option value="424/335">Q 424/335</option>
-      <option value="424/317">Q 424/317</option>
-      <option value="424/295">Q 424/295</option>
-      <option value="424/257">Q 424/257</option>
-      <option value="424/221">Q 424/221</option>
-      <option value="443/443">Q 443/443</option>
-      <option value="443/377">Q 443/377</option>
-      <option value="443/335">Q 443/335</option>
-      <option value="443/317">Q 443/317</option>
-      <option value="443/295">Q 443/295</option>
-      <option value="443/257">Q 443/257</option>
-      <option value="443/221">Q 443/221</option>
-      <option value="473/473">Q 473/473</option>
-      <option value="503/503">Q 503/503</option>
-      <option value="513/513">Q 513/513</option>
-      <option value="513/257">Q 513/257</option>
-      <option value="524/524">Q 524/524</option>
-      <option value="524/443">Q 524/443</option>
-      <option value="524/424">Q 524/424</option>
-      <option value="524/377">Q 524/377</option>
-      <option value="524/335">Q 524/335</option>
-      <option value="524/317">Q 524/317</option>
-      <option value="524/295">Q 524/295</option>
-      <option value="524/257">Q 524/257</option>
-      <option value="589/589">Q 589/589</option>
-      <option value="589/503">Q 589/503</option>
-      <option value="589/378">Q 589/378</option>
-      <option value="589/335">Q 589/335</option>
-      <option value="589/317">Q 589/317</option>
-      <option value="589/295">Q 589/295</option>
-      <option value="634/634">Q 634/634</option>
-      <option value="636/636">Q 636/636</option>
-      <option value="636/424">Q 636/424</option>
-      <option value="709/424">Q 709/424</option>
-      <option value="754/754">Q 754/754</option>
-      <option value="785/785">Q 785/785</option>
-      <option value="785/295">Q 785/295</option>
-      <option value="785/257">Q 785/257</option>
-      <option value="950/950">Q 950/950</option>
-      <option value="1131/1131">Q 1131/1131</option>
-    </select>
+<div id="hasir" class="page">
+<h1>Q Tipi Hasır Metrajı</h1>
+<label>Q Tipi Seç:</label>
+<select id="qTipi">
+<option value="188/188">Q 188/188</option>
+<option value="106/106">Q 106/106</option>
+<option value="131/131">Q 131/131</option>
+<option value="158/158">Q 158/158</option>
+<option value="221/221">Q 221/221</option>
+<option value="257/257">Q 257/257</option>
+<option value="257/188">Q 257/188</option>
+<option value="295/295">Q 295/295</option>
+<option value="295/257">Q 295/257</option>
+<option value="295/221">Q 295/221</option>
+<option value="295/188">Q 295/188</option>
+<option value="295/158">Q 295/158</option>
+<option value="317/317">Q 317/317</option>
+<option value="317/295">Q 317/295</option>
+<option value="317/257">Q 317/257</option>
+<option value="317/221">Q 317/221</option>
+<option value="317/188">Q 317/188</option>
+<option value="335/335">Q 335/335</option>
+<option value="335/317">Q 335/317</option>
+<option value="335/295">Q 335/295</option>
+<option value="335/257">Q 335/257</option>
+<option value="335/221">Q 335/221</option>
+<option value="335/188">Q 335/188</option>
+<option value="377/377">Q 377/377</option>
+<option value="377/335">Q 377/335</option>
+<option value="377/317">Q 377/317</option>
+<option value="377/295">Q 377/295</option>
+<option value="377/257">Q 377/257</option>
+<option value="377/221">Q 377/221</option>
+<option value="377/188">Q 377/188</option>
+<option value="424/424">Q 424/424</option>
+<option value="424/377">Q 424/377</option>
+<option value="424/335">Q 424/335</option>
+<option value="424/317">Q 424/317</option>
+<option value="424/295">Q 424/295</option>
+<option value="424/257">Q 424/257</option>
+<option value="424/221">Q 424/221</option>
+<option value="443/443">Q 443/443</option>
+<option value="443/377">Q 443/377</option>
+<option value="443/335">Q 443/335</option>
+<option value="443/317">Q 443/317</option>
+<option value="443/295">Q 443/295</option>
+<option value="443/257">Q 443/257</option>
+<option value="443/221">Q 443/221</option>
+<option value="473/473">Q 473/473</option>
+<option value="503/503">Q 503/503</option>
+<option value="513/513">Q 513/513</option>
+<option value="513/257">Q 513/257</option>
+<option value="524/524">Q 524/524</option>
+<option value="524/443">Q 524/443</option>
+<option value="524/424">Q 524/424</option>
+<option value="524/377">Q 524/377</option>
+<option value="524/335">Q 524/335</option>
+<option value="524/317">Q 524/317</option>
+<option value="524/295">Q 524/295</option>
+<option value="524/257">Q 524/257</option>
+<option value="589/589">Q 589/589</option>
+<option value="589/503">Q 589/503</option>
+<option value="589/378">Q 589/378</option>
+<option value="589/335">Q 589/335</option>
+<option value="589/317">Q 589/317</option>
+<option value="589/295">Q 589/295</option>
+<option value="634/634">Q 634/634</option>
+<option value="636/636">Q 636/636</option>
+<option value="636/424">Q 636/424</option>
+<option value="709/424">Q 709/424</option>
+<option value="754/754">Q 754/754</option>
+<option value="785/785">Q 785/785</option>
+<option value="785/295">Q 785/295</option>
+<option value="785/257">Q 785/257</option>
+<option value="950/950">Q 950/950</option>
+<option value="1131/1131">Q 1131/1131</option>
+</select>
 
-    <label>Bindirme Sayısı:</label>
-    <select id="bindirme">
-      <option value="1">1 Göz</option>
-      <option value="2">2 Göz</option>
-      <option value="3">3 Göz</option>
-    </select>
+<label>Bindirme Sayısı:</label>
+<select id="bindirme">
+<option value="1">1 Göz</option>
+<option value="2">2 Göz</option>
+<option value="3">3 Göz</option>
+</select>
 
-    <label>Hasır Kat Sayısı:</label>
-    <select id="kat">
-      <option value="1">1 Kat</option>
-      <option value="2">2 Kat</option>
-      <option value="3">3 Kat</option>
-    </select>
+<label>Hasır Kat Sayısı:</label>
+<select id="kat">
+<option value="1">1 Kat</option>
+<option value="2">2 Kat</option>
+<option value="3">3 Kat</option>
+</select>
 
-    <label>Alan (m²):</label>
-    <input type="number" id="alan" placeholder="m²">
+<label>Alan (m²):</label>
+<input type="number" id="alan" placeholder="m²">
 
-    <button class="calc-btn" onclick="hasirHesapla()">Hesapla</button>
-    <h2 id="sonucHasir">Sonuç: -</h2>
-  </div>
+<button class="calc-btn" onclick="hasirHesapla()">Hesapla</button>
+<h2 id="sonucHasir">Sonuç: -</h2>
+</div>
 
 </div>
 
@@ -215,18 +163,18 @@ function hesapla(){
 
 // Hasır Metraj
 const qAgirlik={
-  "188/188":3.01,"106/106":1.7,"131/131":2.09,"158/158":2.54,"221/221":3.53,
-  "257/257":4.1,"257/188":3.5,"295/295":5.5,"295/257":5,"295/221":4.6,"295/188":4,"295/158":3.6,
-  "317/317":6,"317/295":5.8,"317/257":5.3,"317/221":4.9,"317/188":4.2,
-  "335/335":6.5,"335/317":6.2,"335/295":5.8,"335/257":5.4,"335/221":5,"335/188":4.5,
-  "377/377":7.5,"377/335":7,"377/317":6.8,"377/295":6.5,"377/257":6,"377/221":5.5,"377/188":5,
-  "424/424":8.5,"424/377":8,"424/335":7.5,"424/317":7.2,"424/295":6.8,"424/257":6.2,"424/221":5.8,
-  "443/443":9,"443/377":8.5,"443/335":8,"443/317":7.6,"443/295":7.2,"443/257":6.8,"443/221":6.2,
-  "473/473":9.5,"503/503":10,"513/513":10.2,"513/257":7,"524/524":10.5,"524/443":9.8,
-  "524/424":9.5,"524/377":9,"524/335":8.5,"524/317":8.2,"524/295":7.8,"524/257":7.4,
-  "589/589":11.5,"589/503":10.5,"589/378":9.2,"589/335":8.5,"589/317":8.2,"589/295":7.8,
-  "634/634":12.5,"636/636":12.5,"636/424":10,"709/424":11,"754/754":13.5,"785/785":14,
-  "785/295":8.5,"785/257":8,"950/950":16,"1131/1131":18
+"188/188":3.01,"106/106":1.7,"131/131":2.09,"158/158":2.54,"221/221":3.53,
+"257/257":4.1,"257/188":3.5,"295/295":5.5,"295/257":5,"295/221":4.6,"295/188":4,"295/158":3.6,
+"317/317":6,"317/295":5.8,"317/257":5.3,"317/221":4.9,"317/188":4.2,
+"335/335":6.5,"335/317":6.2,"335/295":5.8,"335/257":5.4,"335/221":5,"335/188":4.5,
+"377/377":7.5,"377/335":7,"377/317":6.8,"377/295":6.5,"377/257":6,"377/221":5.5,"377/188":5,
+"424/424":8.5,"424/377":8,"424/335":7.5,"424/317":7.2,"424/295":6.8,"424/257":6.2,"424/221":5.8,
+"443/443":9,"443/377":8.5,"443/335":8,"443/317":7.6,"443/295":7.2,"443/257":6.8,"443/221":6.2,
+"473/473":9.5,"503/503":10,"513/513":10.2,"513/257":7,"524/524":10.5,"524/443":9.8,
+"524/424":9.5,"524/377":9,"524/335":8.5,"524/317":8.2,"524/295":7.8,"524/257":7.4,
+"589/589":11.5,"589/503":10.5,"589/378":9.2,"589/335":8.5,"589/317":8.2,"589/295":7.8,
+"634/634":12.5,"636/636":12.5,"636/424":10,"709/424":11,"754/754":13.5,"785/785":14,
+"785/295":8.5,"785/257":8,"950/950":16,"1131/1131":18
 };
 
 function hasirHesapla(){
@@ -237,15 +185,19 @@ function hasirHesapla(){
   if(isNaN(alan)||alan<=0){ alert("Lütfen geçerli alan girin."); return; }
 
   let kgM2=qAgirlik[q];
-  let toplamKg=kgM2*alan*kat;   // Bindirme kg etkilemez
+  let toplamKg=kgM2*alan*kat;
   let tonaj=(toplamKg/1000).toFixed(2);
 
-  let gozAlan=0.15*0.15; // 1 göz alanı
-  let efektifAlan=gozAlan*bindirme; 
-  let adet=Math.ceil((alan/efektifAlan)*kat);
+  let hasirBoy=2.15*5; // m²
+  let gozAlan=0.15*0.15; // m²
+  let toplamGoz=(hasirBoy/gozAlan); // hasır başına göz sayısı
+  let efektifHasirAlani=hasirBoy - (bindirme*gozAlan); // bindirme düşüldü
+  if(efektifHasirAlani<=0) efektifHasirAlani=gozAlan; // minimum 1 göz
+
+  let adet=Math.ceil((alan/efektifHasirAlani)*kat);
 
   document.getElementById("sonucHasir").innerText=
-    `Toplam Alan: ${alan} m²\nToplam Ağırlık: ${tonaj} ton\nToplam Adet: ${adet} adet`;
+  `Toplam Alan: ${alan} m²\nToplam Ağırlık: ${tonaj} ton\nToplam Adet: ${adet} adet`;
 }
 </script>
 
