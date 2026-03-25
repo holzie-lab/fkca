@@ -9,6 +9,8 @@ body {
   font-family: Arial;
   background: #f0f2f5;
 }
+
+/* Hamburger Menü */
 .menu-btn {
   position: fixed;
   top: 15px;
@@ -22,6 +24,8 @@ body {
   cursor: pointer;
   z-index: 100;
 }
+
+/* Sidebar */
 .sidebar {
   width: 220px;
   background: #334155;
@@ -29,13 +33,15 @@ body {
   padding: 20px;
   position: fixed;
   top: 0;
-  left: -220px;
+  left: -220px; /* gizli başlar */
   height: 100%;
   transition: left 0.3s ease;
   z-index: 99;
 }
 .sidebar.active { left:0; }
 .sidebar button { width:100%; padding:10px; margin-top:10px; background:#475569; border:none; color:white; cursor:pointer; }
+
+/* İçerik kartı */
 .content {
   display: flex;
   justify-content: center;
@@ -52,32 +58,39 @@ body {
   max-width: 90%;
 }
 .page.active { display:block; }
-input, select {
-  display:block; margin:10px 0; padding:8px; width:100%; box-sizing:border-box;
-}
+input, select { display:block; margin:10px 0; padding:8px; width:100%; box-sizing:border-box; }
 button.calc-btn { padding:10px; margin-top:10px; cursor:pointer; width:100%; }
 </style>
 </head>
 <body>
 
+<!-- Hamburger -->
 <button class="menu-btn" onclick="menuToggle()">☰</button>
 
+<!-- Sidebar -->
 <div class="sidebar" id="sidebar">
   <h3>Hesaplar</h3>
   <button onclick="sayfaGoster('demir')">Demir Hesaplama</button>
   <button onclick="sayfaGoster('hasir')">Q Tipi Hasır Metrajı</button>
 </div>
 
+<!-- İçerik -->
 <div class="content">
+
+  <!-- Demir -->
   <div id="demir" class="page">
     <h1>Demir Çapı Hesaplama</h1>
-    <label>Eski Çap (mm)</label><input type="number" id="eskiCap">
-    <label>Eski Adet</label><input type="number" id="eskiAdet">
-    <label>Yeni Çap (mm)</label><input type="number" id="yeniCap">
+    <label>Eski Çap (mm)</label>
+    <input type="number" id="eskiCap">
+    <label>Eski Adet</label>
+    <input type="number" id="eskiAdet">
+    <label>Yeni Çap (mm)</label>
+    <input type="number" id="yeniCap">
     <button class="calc-btn" onclick="hesapla()">Hesapla</button>
     <h2 id="sonuc">Sonuç: -</h2>
   </div>
 
+  <!-- Hasır -->
   <div id="hasir" class="page">
     <h1>Q Tipi Hasır Metrajı</h1>
     <label>Q Tipi Seç:</label>
@@ -176,6 +189,7 @@ button.calc-btn { padding:10px; margin-top:10px; cursor:pointer; width:100%; }
     <button class="calc-btn" onclick="hasirHesapla()">Hesapla</button>
     <h2 id="sonucHasir">Sonuç: -</h2>
   </div>
+
 </div>
 
 <script>
@@ -226,9 +240,9 @@ function hasirHesapla(){
   let toplamKg=kgM2*alan*kat;   // Bindirme kg etkilemez
   let tonaj=(toplamKg/1000).toFixed(2);
 
-  // Adet = toplam kg ÷ tek bir hasır kg
-  let tekHasirKg=kgM2*bindirme; // tek hasırın ağırlığı (bindirme kadar overlap)
-  let adet=Math.ceil(toplamKg/tekHasirKg);
+  let gozAlan=0.15*0.15; // 1 göz alanı
+  let efektifAlan=gozAlan*bindirme; 
+  let adet=Math.ceil((alan/efektifAlan)*kat);
 
   document.getElementById("sonucHasir").innerText=
     `Toplam Alan: ${alan} m²\nToplam Ağırlık: ${tonaj} ton\nToplam Adet: ${adet} adet`;
